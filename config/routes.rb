@@ -1,4 +1,17 @@
 Rails.application.routes.draw do
-  resources :users
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :users, only: [:index]
+  resources :messages, only: [:new, :create]
+  resources :conversations, only: [:index, :show, :destroy] do
+    member do
+      post :reply
+    end
+
+    member do
+      post :restore
+    end
+
+    collection do
+      delete :empty_trash
+    end
+  end
 end

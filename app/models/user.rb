@@ -10,7 +10,9 @@ class User < ApplicationRecord
     def mailboxer_email(object)
       #Check if an email should be sent for that object
       #if true
-      return "define_email@on_your.model"
+      # return "define_email@on_your.model"
+      Email notifications are now enabled
+      email
       #if false
       #return nil
     end

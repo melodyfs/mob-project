@@ -4,8 +4,9 @@ class UsersController < ApplicationController
   # GET /users
   def index
     @users = User.all
-
     render json: @users
+    # or:
+    @users = User.order('created_at DESC').paginate(page: params[:page], per_page: 30)
   end
 
   # GET /users/1
