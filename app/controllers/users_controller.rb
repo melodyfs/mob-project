@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
-
+  before_action :authenticate_user!
+  skip_before_action :authenticate_user!, only: [:create], raise: false
   # GET /users
   def index
     @users = User.all
@@ -47,6 +48,6 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:username, :email, :password)
+      params.permit(:username, :email, :password)
     end
 end

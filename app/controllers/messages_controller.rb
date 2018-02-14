@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  # auth user later
+  before_action :authenticate_user!
 
   # this makes @chosen_recipient either contains a user record or a nil value.
   def new

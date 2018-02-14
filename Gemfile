@@ -12,6 +12,7 @@ gem 'pg', '~> 0.18'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 gem 'mailboxer'
+gem 'devise'
 group :test do
   gem 'rspec-rails', '~> 3.7', '>= 3.7.2'
   gem 'database_cleaner', '~> 1.6', '>= 1.6.2'
