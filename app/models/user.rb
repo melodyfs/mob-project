@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-
+  before_action :authenticate_user!
+  user_signed_in?
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
     acts_as_messageable
@@ -13,11 +14,10 @@ class User < ApplicationRecord
     #Returning the email address of the model if an email should be sent for this object (Message or Notification).
     #If no mail has to be sent, return nil.
     def mailboxer_email(object)
+        
       #Check if an email should be sent for that object
       #if true
-      # return "define_email@on_your.model"
-      Email notifications are now enabled
-      email
+      return "define_email@on_your.model"
       #if false
       #return nil
     end
