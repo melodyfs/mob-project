@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+    devise_for :users, controllers: {
+        sessions: 'users/sessions'
+      }
+
   resources :users, only: [:index, :create, :show, :destroy]
   resources :messages, only: [:new, :create]
   resources :conversations, only: [:index, :show, :destroy] do
