@@ -4,7 +4,7 @@ class User < ApplicationRecord
   # before_action :authenticate_user!
   # user_signed_in?
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
     acts_as_messageable
     #Returning any kind of identification you want for the model
@@ -18,7 +18,7 @@ class User < ApplicationRecord
 
       #Check if an email should be sent for that object
       #if true
-      return "define_email@on_your.model"
+      return email
       #if false
       #return nil
     end

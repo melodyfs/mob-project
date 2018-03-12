@@ -1,4 +1,9 @@
+require "application_responder"
+
 class ApplicationController < ActionController::API
+  self.responder = ApplicationResponder
+  respond_to :html
+
   # in case no msg record found
 # rescue from ActiveRecord::RecordNotFound
 #   # flash[:warning] = 'resource not found'

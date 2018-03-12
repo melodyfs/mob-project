@@ -13,6 +13,7 @@ gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.7'
 gem 'mailboxer'
 gem 'devise'
+gem 'responders'
 group :test do
   gem 'rspec-rails', '~> 3.7', '>= 3.7.2'
   gem 'database_cleaner', '~> 1.6', '>= 1.6.2'
