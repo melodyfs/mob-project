@@ -41,49 +41,38 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCell", for: indexPath) as! ImageTableViewCell
         
         let url = imageURLArray[indexPath.row % imageURLArray.count]
-//        finished smooth scrolling by downloading img data using background queue
-        let downloadQueue = DispatchQueue(label: "download", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
         
-        downloadQueue.async {
+        let opertion = OperationQueue()
+        
+        let downloadOperation = BlockOperation {
+            print("Downloading: \(indexPath.row)")
             self.data = try? Data(contentsOf: url)
-            if let imgData = self.data {
-
-                    let image = UIImage(data: imgData)
-                    // TODO: add sepia filter to image
-                    let inputImage = CIImage(data: UIImagePNGRepresentation(image!)!)
-                    let filter = CIFilter(name: "CISepiaTone")!
-                    filter.setValue(inputImage, forKey: kCIInputImageKey)
-                    filter.setValue(0.8, forKey: kCIInputIntensityKey)
-                    let outputCIImage = filter.outputImage
-                    self.imageWithFilter = UIImage(ciImage: outputCIImage!)
-                    DispatchQueue.main.async {
-                        cell.pictureImageView.image = self.imageWithFilter
-                    }
-                }
+            
         }
         
-//        if let imgData = self.data {
-//            let image = UIImage(data: imgData)
-//            // TODO: add sepia filter to image
-//            let inputImage = CIImage(data: UIImagePNGRepresentation(image!)!)
-//            let filter = CIFilter(name: "CISepiaTone")!
-//            filter.setValue(inputImage, forKey: kCIInputImageKey)
-//            filter.setValue(0.8, forKey: kCIInputIntensityKey)
-//            let outputCIImage = filter.outputImage
-//            self.imageWithFilter = UIImage(ciImage: outputCIImage!)
-//            //        first download image, than add filter to the image
-//
-//        }
+        downloadOperation.queuePriority = .high
         
-//        if let filter = self.imageWithFilter {
-//            DispatchQueue.main.async {
-//                cell.pictureImageView.image = filter
-//            }
-//        }
+        let filterOperation = BlockOperation {
+            if let imgData = self.data {
+                print("Filtering: \(indexPath.row)")
+                let image = UIImage(data: imgData)
+                // TODO: add sepia filter to image
+                let inputImage = CIImage(data: UIImagePNGRepresentation(image!)!)
+                let filter = CIFilter(name: "CISepiaTone")!
+                filter.setValue(inputImage, forKey: kCIInputImageKey)
+                filter.setValue(0.8, forKey: kCIInputIntensityKey)
+                let outputCIImage = filter.outputImage
+                self.imageWithFilter = UIImage(ciImage: outputCIImage!)
+                
+                DispatchQueue.main.async {
+                    cell.pictureImageView.image = self.imageWithFilter
+                }
+            }
+        }
+        filterOperation.addDependency(downloadOperation)
         
-        
-        
-        
+        opertion.addOperations([downloadOperation, filterOperation], waitUntilFinished: false)
+ 
         return cell
     }
     
