@@ -7,72 +7,113 @@
 //
 
 import UIKit
-
 class ViewController: UIViewController {
     
     let numberOfCells = 20_000
     var imageWithFilter: UIImage?
     let imageURLArray = Unsplash.defaultImageURLs
-    var data: Data?
-    // MARK: - VC Lifecycle
     
+    var photos = [PhotoRecord]()
+    let pendingOperations = PendingOperations()
+    @IBOutlet weak var tableView: UITableView!
+    // MARK: - VC Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
     }
+   
+    func startDownload(photoRecord: PhotoRecord, indexPath: IndexPath) {
+        if let downloadOperation = pendingOperations.downloadsInProgress[indexPath] {
+            return
+        }
+        
+        let downloader = ImageDownloader(photoRecord: photoRecord)
+        
+        downloader.completionBlock = {
+            if downloader.isCancelled {
+                return
+            }
+//            if finish download, remove inprogress value from dict
+            DispatchQueue.main.async {
+                self.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
+                self.tableView.reloadRows(at: [indexPath], with: .fade)
+            }
+        }
+//        add operation queue
+        pendingOperations.downloadsInProgress[indexPath] = downloader
+        pendingOperations.downloadQueue.addOperation(downloader)
+        
+    }
     
-    func cancelDownload(cancelQueue: DispatchQueue) {
-        cancelQueue.suspend()
+    func startFilter(photoRecord: PhotoRecord, indexPath: IndexPath) {
+        if let filterOperation = pendingOperations.filtrationsInProgress[indexPath] {
+            return
+        }
+        let filter = ImageFilter(photoRecord: photoRecord)
+        filter.completionBlock = {
+            if filter.isCancelled {
+                return
+            }
+            DispatchQueue.main.async {
+                self.pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+                self.tableView.reloadRows(at: [indexPath], with: .fade)
+            }
+        }
+        
+        pendingOperations.filtrationsInProgress[indexPath] = filter
+        pendingOperations.filtrationQueue.addOperation(filter)
+    }
+    
+    func startOperationsForPhotoRecord(photoRecord: PhotoRecord, indexPath: IndexPath) {
+        switch(photoRecord.state){
+        case .New:
+            startDownload(photoRecord: photoRecord, indexPath: indexPath)
+        case .Downloaded:
+            startFilter(photoRecord: photoRecord, indexPath: indexPath)
+        default:
+            NSLog("do nothing")
+        }
     }
 }
 
 // MARK: - UITableViewDataSource
-
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return numberOfCells
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        self.cancelDownload(cancelQueue: <#T##DispatchQueue#>)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCell", for: indexPath) as! ImageTableViewCell
+//        self.operation.cancelAllOperations()
+//        cell.imageView?.image = nil
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCell", for: indexPath) as! ImageTableViewCell
-        
         let url = imageURLArray[indexPath.row % imageURLArray.count]
         
-        let opertion = OperationQueue()
-        
-        let downloadOperation = BlockOperation {
-            print("Downloading: \(indexPath.row)")
-            self.data = try? Data(contentsOf: url)
-            
+        if cell.accessoryView == nil {
+            let indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+            cell.accessoryView = indicator
         }
         
-        downloadOperation.queuePriority = .high
+        let indicator = cell.accessoryView as! UIActivityIndicatorView
+//        append urls to photorecord
+        let photoRecord = PhotoRecord(url: url)
+        self.photos.append(photoRecord)
         
-        let filterOperation = BlockOperation {
-            if let imgData = self.data {
-                print("Filtering: \(indexPath.row)")
-                let image = UIImage(data: imgData)
-                // TODO: add sepia filter to image
-                let inputImage = CIImage(data: UIImagePNGRepresentation(image!)!)
-                let filter = CIFilter(name: "CISepiaTone")!
-                filter.setValue(inputImage, forKey: kCIInputImageKey)
-                filter.setValue(0.8, forKey: kCIInputIntensityKey)
-                let outputCIImage = filter.outputImage
-                self.imageWithFilter = UIImage(ciImage: outputCIImage!)
-                
-                DispatchQueue.main.async {
-                    cell.pictureImageView.image = self.imageWithFilter
-                }
-            }
+        cell.imageView?.image = photoRecord.image
+        
+        switch(photoRecord.state) {
+        case .Filtered:
+            indicator.stopAnimating()
+        case .Failed:
+            indicator.stopAnimating()
+        case .New, .Downloaded:
+            indicator.startAnimating()
+            self.startOperationsForPhotoRecord(photoRecord: photoRecord, indexPath: indexPath)
         }
-        filterOperation.addDependency(downloadOperation)
         
-        opertion.addOperations([downloadOperation, filterOperation], waitUntilFinished: false)
- 
         return cell
     }
     

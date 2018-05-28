@@ -15,6 +15,10 @@
 		CA5EAEC51E60152400B25492 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5EAEC41E60152400B25492 /* ImageTableViewCell.swift */; };
 		CA5EAEC71E60227E00B25492 /* Unsplash.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5EAEC61E60227E00B25492 /* Unsplash.swift */; };
 		CA5EAEC91E6023DC00B25492 /* ViewController+Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5EAEC81E6023DC00B25492 /* ViewController+Misc.swift */; };
+		F9727F0420BC8B270015AC07 /* PhotoRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9727F0320BC8B270015AC07 /* PhotoRecord.swift */; };
+		F9727F0620BC8B600015AC07 /* PendingOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9727F0520BC8B600015AC07 /* PendingOperations.swift */; };
+		F9727F0920BC8BE90015AC07 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9727F0820BC8BE90015AC07 /* ImageDownloader.swift */; };
+		F9727F0B20BC8E3A0015AC07 /* ImageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9727F0A20BC8E3A0015AC07 /* ImageFilter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		CA5EAEC41E60152400B25492 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
 		CA5EAEC61E60227E00B25492 /* Unsplash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsplash.swift; sourceTree = "<group>"; };
 		CA5EAEC81E6023DC00B25492 /* ViewController+Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+Misc.swift"; sourceTree = "<group>"; };
+		F9727F0320BC8B270015AC07 /* PhotoRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRecord.swift; sourceTree = "<group>"; };
+		F9727F0520BC8B600015AC07 /* PendingOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingOperations.swift; sourceTree = "<group>"; };
+		F9727F0820BC8BE90015AC07 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		F9727F0A20BC8E3A0015AC07 /* ImageFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +71,7 @@
 				CA5EAEB41E6011DE00B25492 /* ViewController.swift */,
 				CA5EAEC41E60152400B25492 /* ImageTableViewCell.swift */,
 				CA5EAECA1E6025FE00B25492 /* Supporting Files */,
+				F9727F0320BC8B270015AC07 /* PhotoRecord.swift */,
 			);
 			path = GCDAsyncImage;
 			sourceTree = "<group>";
@@ -77,6 +86,9 @@
 				CA5EAEB91E6011DE00B25492 /* Assets.xcassets */,
 				CA5EAEBB1E6011DE00B25492 /* LaunchScreen.storyboard */,
 				CA5EAEBE1E6011DE00B25492 /* Info.plist */,
+				F9727F0520BC8B600015AC07 /* PendingOperations.swift */,
+				F9727F0820BC8BE90015AC07 /* ImageDownloader.swift */,
+				F9727F0A20BC8E3A0015AC07 /* ImageFilter.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -154,8 +166,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9727F0B20BC8E3A0015AC07 /* ImageFilter.swift in Sources */,
 				CA5EAEC91E6023DC00B25492 /* ViewController+Misc.swift in Sources */,
+				F9727F0420BC8B270015AC07 /* PhotoRecord.swift in Sources */,
+				F9727F0920BC8BE90015AC07 /* ImageDownloader.swift in Sources */,
 				CA5EAEC51E60152400B25492 /* ImageTableViewCell.swift in Sources */,
+				F9727F0620BC8B600015AC07 /* PendingOperations.swift in Sources */,
 				CA5EAEB51E6011DE00B25492 /* ViewController.swift in Sources */,
 				CA5EAEB31E6011DE00B25492 /* AppDelegate.swift in Sources */,
 				CA5EAEC71E60227E00B25492 /* Unsplash.swift in Sources */,
